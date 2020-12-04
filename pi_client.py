@@ -1,11 +1,10 @@
-from typing import NoReturn
 import time
 
 import RPi.GPIO as GPIO
 import requests
 
 
-def on_vibrate(channel) -> NoReturn:
+def on_vibrate(channel):
     requests.post('http://10.1.5.118/update', json={'washer_id': 0})
     time.sleep(5)
 
