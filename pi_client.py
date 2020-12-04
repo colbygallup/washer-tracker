@@ -6,7 +6,7 @@ import requests
 
 def on_vibrate(channel):
     print('ping!')
-    requests.post('http://10.1.5.118/update', json={'washer_id': 0})
+    requests.post('http://10.1.5.118:5000/update', json={'washer_id': 0})
     time.sleep(5)
 
 
