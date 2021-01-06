@@ -25,7 +25,7 @@ class VibrationSensor(Sensor):
     def get_washer(self, id: int) -> WasherState:
         try:
             last_vibration: int = self.washers[id]
-            if time() - last_vibration < 30:
+            if time() - last_vibration < self.TIMEFRAME:
                 return WasherState.FULL
             else:
                 return WasherState.EMPTY

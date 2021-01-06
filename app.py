@@ -1,5 +1,5 @@
+from sensors import QRSensor
 from flask.json import jsonify
-from sensors.vibration_sensor import VibrationSensor
 from sensor import Sensor
 
 from flask import Flask
@@ -7,7 +7,7 @@ from flask import Flask
 
 app: Flask = Flask(__name__)
 
-sensor: Sensor = VibrationSensor()
+sensor: Sensor = QRSensor()
 sensor.register(app)
 
 

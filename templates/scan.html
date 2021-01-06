@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Washer Tracker</title>
+</head>
+<body>
+  <form id="form">
+    <select id="new_state" name="new_state" onselect="onSelectState(this.value);" >
+      <option selected>Select one...</option>
+      <option value="RUNNING">Adding a load</option>
+      <option value="EMPTY">Removing a load</option>
+    </select>
+
+    <select id="cycle" name="cycle" hidden>
+      <option selected>Select one...</option>
+
+      {% if for_washer %}
+      <option value="WASHER_PERM_PRESS">Perm Press (24 minutes)</option>
+      <option value="WASHER_COOL">Cool (27 minutes)</option>
+      {% else %}
+      <option value="DRYER_DELICATES">Delicates (40 minutes)</option>
+      <option value="DRYER_MEDIUM">Medium (42 minutes)</option>
+      {% endif %}
+    </select>
+
+    <button onclick="sendData();">Submit</button>
+  </form>
+  <script>
+    function onSelectState(value) {
+      const cycleSelector = document.getElementById('cycle');
+      cycleSelector.hidden = value === 'RUNNING';
+    }
+
+    function sendData() {
+      const formData = new FormData(document.getElementById('form'));
+
+      const payload = {
+        state: formData.get('new_state')
+      };
+      if (payload.state === 'RUNNING') {
+        payload.cycle = formData.get('cycle');
+      }
+
+      fetch('/scan', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(
+        () => alert('Thank you!'),
+        () => alert('Something went wrong, please try again later.')
+      );
+    }
+  </script>
+</body>
+</html>
