@@ -49,10 +49,9 @@
         headers: {
           'Content-Type': 'application/json'
         }
-      }).then(
-        () => alert('Thank you!'),
-        () => alert('Something went wrong, please try again later.')
-      );
+      })
+        .then(() => alert('Thank you!'))
+        .catch(() => alert('Something went wrong, please try again later.'));
     }
   </script>
 </body>
