@@ -4,8 +4,8 @@
   <title>Washer Tracker</title>
 </head>
 <body>
-  <form id="form">
-    <select id="new_state" name="new_state" onselect="onSelectState(this.value);" >
+  <form id="form" onsubmit="sendData(event)">
+    <select id="new_state" name="new_state" onchange="onSelectState(this.value);" >
       <option selected>Select one...</option>
       <option value="RUNNING">Adding a load</option>
       <option value="EMPTY">Removing a load</option>
@@ -23,15 +23,17 @@
       {% endif %}
     </select>
 
-    <button onclick="sendData();">Submit</button>
+    <input type="submit" value="Submit">
   </form>
   <script>
     function onSelectState(value) {
       const cycleSelector = document.getElementById('cycle');
-      cycleSelector.hidden = value === 'RUNNING';
+      cycleSelector.hidden = value !== 'RUNNING';
     }
 
-    function sendData() {
+    function sendData(event) {
+      event.preventDefault();
+
       const formData = new FormData(document.getElementById('form'));
 
       const payload = {
@@ -41,7 +43,7 @@
         payload.cycle = formData.get('cycle');
       }
 
-      fetch('/scan', {
+      fetch('/scan/' + window.location.pathname.split("/").pop(), {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: {

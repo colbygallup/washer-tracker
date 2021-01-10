@@ -21,26 +21,26 @@ class QRSensor(Sensor):
 
     def __init__(self) -> NoReturn:
         # {washer id: finish time}
-        self.washers: Dict[int, int] = defaultdict(int)
+        self.washers: Dict[int, int] = defaultdict(lambda: -1)
 
     def register(self, app: Flask) -> NoReturn:
-        def scan() -> str:
+        def scan(washer_id: int) -> str:
             if request.method == 'POST':
                 data: Dict = request.get_json()
 
                 new_state: WasherState = WasherState[data['state']]
                 if new_state == WasherState.RUNNING:
                     end_time: int = time() + self.CYCLES[data['cycle']]
-                    self.washers[int(data['washer_id'])] = end_time
+                    self.washers[washer_id] = end_time
                 elif new_state == WasherState.EMPTY:
                     # set to magic "empty" number
-                    self.washers[int(data['washer_id'])] = -1
+                    self.washers[washer_id] = -1
 
                 return 'ok'
             else:  # request.method == 'GET'
                 return render_template('scan.html')
 
-        app.add_url_rule('/scan', 'scan', scan, methods=['GET', 'POST'])
+        app.add_url_rule('/scan/<int:washer_id>', 'scan', scan, methods=['GET', 'POST'])
 
     def get_washer(self, id: int) -> WasherState:
         try:

@@ -19,3 +19,9 @@ def index() -> str:
 @app.route('/washers', methods=['GET'])
 def washers() -> str:
     return jsonify({i: sensor.get_washer(i).name for i in range(10)})
+
+
+if __name__ == '__main__':
+    app.jinja_env.auto_reload = True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.run(debug=True)
