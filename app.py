@@ -1,6 +1,7 @@
+from flask.templating import render_template
 from sensors import QRSensor
 from flask.json import jsonify
-from sensor import Sensor
+from sensor import Sensor, WasherState
 
 from flask import Flask
 
@@ -13,7 +14,10 @@ sensor.register(app)
 
 @app.route('/', methods=['GET'])
 def index() -> str:
-    return 'test'
+    return render_template('index.html', **{
+        'washers': {i: sensor.get_washer(i) for i in range(10)},
+        'WasherState': WasherState
+    })
 
 
 @app.route('/washers', methods=['GET'])
